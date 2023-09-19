@@ -5,8 +5,13 @@ export default {
     './index.html'
   ],
   theme: {
-    extend: {},
+    extend: {    
+      colors: {
+        'jays-orange': '#AE3905',
+        'jays-gray': '#F3F4F8',
+        'jays-text': '#5F687B',
+      }
+    },
   },
   plugins: [],
 }
-

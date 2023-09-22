@@ -1,5 +1,6 @@
 import { ImageCard } from "../components/ImageCard";
 import jayslogo from '../assets/images/jayslogo.png';
+import { Link } from "react-router-dom";
 
 
 export function LoginPage() {
@@ -48,9 +49,9 @@ export function LoginPage() {
                             className='bg-white mt-11 font-semibold h-8 border border-gray-500 rounded-md w-10/12'>
                             Login com o Google
                         </button>
-                        <a className='pt-8 text-xs text-right' href="#">
-                        Não tem uma conta? <span className="text-orange-700 font-semibold">Cadastre-se</span>
-                        </a>
+                        <div className='pt-8 text-xs text-right'>
+                        Não tem uma conta? <Link to="/registerpage" className="text-orange-700 font-semibold">Cadastre-se</Link>
+                        </div>
 
                     </div>
                 </form>

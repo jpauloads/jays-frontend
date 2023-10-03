@@ -10,6 +10,7 @@ export default {
         'jays-orange': '#AE3905',
         'jays-gray': '#F3F4F8',
         'jays-text': '#5F687B',
+        'jays-hover': '#FF6600'
       }
     },
   },

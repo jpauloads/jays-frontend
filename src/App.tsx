@@ -5,10 +5,12 @@ import './styles/global.css';
 
 export function App() {
   return (
-    <main className="w-screen h-screen flex flex-wrap items-center justify-center">
-      <div className="flex">
-        <AppRoutes />
-      </div>
-    </main> 
+    <div>
+      <main>
+        <div>
+          <AppRoutes />
+        </div>
+      </main>
+    </div>
   )
 }

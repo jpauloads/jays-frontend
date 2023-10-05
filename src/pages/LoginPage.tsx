@@ -36,7 +36,7 @@ export function LoginPage() {
                                         type="password"
                                         name='password' />
                                 </div>
-                                <a className='text-xs text-right text-orange-700' href="#">Esqueceu a senha?</a>
+                                <Link to="/redefinirsenha" className='text-xs text-right text-orange-700'>Esqueceu a senha?</Link>
 
                                 <div className='flex justify-center items-center flex-col'>
                                     <button

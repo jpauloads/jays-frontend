@@ -103,7 +103,7 @@ export function RegisterPage() {
         } catch (error) {
             console.error("Erro ao enviar dados para a API", error);
             const axiosError = error as AxiosError;
-            if (axiosError.response && axiosError.response.status === 400 && 'error' in axiosError.response.data) {
+            if (axiosError.response && axiosError.response.status === 400) {
                 setErrorMessage((axiosError.response.data as { error: string }).error);
             } else {
                 setErrorMessage("Ocorreu um problema. Por favor, tente novamente mais tarde.");

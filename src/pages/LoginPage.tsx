@@ -1,9 +1,96 @@
+// import React from "react";
 import { ImageCard } from "../components/ImageCard";
 import jayslogo from '../assets/images/jayslogo.png';
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "../lib/axios";
+import { SHA256 } from 'crypto-js';
+import { useContext, useState } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import ErrorModal from "../components/ErrorModal";
 
+
+const styleP = "text-xs font-semibold text-red-500"
+
+
+
+
+const loginFormSchema = z.object({
+  email: z.string().email('Email inválido'),
+  senha: z.string().min(1, 'Digite sua senha'),
+});
+
+type LoginFormInput = z.infer<typeof loginFormSchema>;
 
 export function LoginPage() {
+
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const { 
+        register, 
+        handleSubmit, 
+        formState: { errors } 
+    } = useForm<LoginFormInput>({
+        resolver: zodResolver(loginFormSchema)
+    });
+
+    const { login } = useContext(AuthContext);
+    // const history = useHistory();
+
+    
+
+    const handleFormSubmit = async (data: LoginFormInput) => {
+        try {
+            const encryptedPassword = SHA256(data.senha).toString();
+            const payload = { email: data.email, senha: encryptedPassword };
+            
+            // Usando o método GET com corpo de requisição
+            const response = await api.get('/usuario', { data: payload });
+            
+            if (response.status === 200) {
+                login(response.data);
+                alert("Login bem-sucedido!");
+                // history.push('/dashboard');
+            } else {
+                alert("Falha ao realizar login");
+                console.error("Erro ao fazer login");
+            }
+        } catch (error) {
+            console.error("Erro na chamada da API", error);
+            setErrorMessage("Ocorreu um problema ao tentar fazer login. Por favor, tente novamente mais tarde.");
+        }
+    };
+    
+    // const handleFormSubmit = async (data: LoginFormInput) => {
+    //     try {
+    //         const encryptedPassword = SHA256(data.senha).toString();
+    //         const payload = { email: data.email, senha: encryptedPassword };
+
+    //         const response = await api.post('/usuario', payload);
+            
+    //         if (response.status === 200) {
+    //             login(response.data);
+    //             alert("Login bem-sucedido!");
+    //             // history.push('/dashboard');
+    //         } else {
+    //             alert("Falha ao realizar login");
+    //             console.error("Erro ao fazer login");
+    //         }
+    //     } catch (error) {
+    //         console.error("Erro na chamada da API", error);
+    //         setErrorMessage("Ocorreu um problema ao tentar fazer login. Por favor, tente novamente mais tarde.");
+    //     }
+    // };
+
+    const closeErrorModal = () => {
+        setModalOpen(false);
+        setErrorMessage(null);
+    };
+
+    
+
     return (
         <>
             <div className="w-screen h-screen flex flex-wrap items-center justify-center">
@@ -15,27 +102,37 @@ export function LoginPage() {
 
                         <div className='flex justify-center'>
 
-                            <form className='flex flex-col gap-4 w-8/12' action="">
-
+                            <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col gap-4 w-8/12'>
                                 <div className='mb-4'>
-                                    <label className='mb-2' htmlFor="">
+                                    <label className='mb-2' htmlFor="email">
                                         E-mail</label>
-                                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline focus:shadow-outline"
+                                    <input 
+                                        {...register("email")} 
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline focus:shadow-outline"
                                         id="email"
                                         placeholder="Informe seu e-mail"
                                         type="email"
-                                        name='email' />
+                                    />
+                                    {errors.email?.message && (
+                                        <p className={styleP}>{errors.email?.message}</p>
+                                    )}
                                 </div>
 
                                 <div className='mb-1'>
-                                    <label className='mb-2' htmlFor="">
+                                    <label className='mb-2' htmlFor="password">
                                         Password</label>
-                                    <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    <input 
+                                        {...register("senha")}
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         id="password"
-                                        placeholder="******************"
+                                        placeholder="Digite sua senha"
                                         type="password"
-                                        name='password' />
+                                    />
+                                    {errors.senha?.message && (
+                                        <p className={styleP}>{errors.senha?.message}</p>
+                                    )}
                                 </div>
+
                                 <Link to="/redefinirsenha" className='text-xs text-right text-orange-700'>Esqueceu a senha?</Link>
 
                                 <div className='flex justify-center items-center flex-col'>
@@ -56,11 +153,12 @@ export function LoginPage() {
 
                                 </div>
                             </form>
+                            {errorMessage && <ErrorModal message={errorMessage} onClose={closeErrorModal} />}
                         </div>
                     </div>
                     <ImageCard imagem={jayslogo} />
                 </div>
             </div>
         </>
-    )
+    );
 }

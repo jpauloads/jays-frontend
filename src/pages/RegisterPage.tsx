@@ -1,16 +1,14 @@
 import { ImageCard } from "../components/ImageCard";
 import jayslogo from '../assets/images/persona2.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import axios from 'axios';
 import { zipCodeMask, cpfMask } from "../utils/masks";
 import { api } from "../lib/axios";
-import ErrorModal from "../components/ErrorModal";
-import SuccessModal from "../components/SuccessModal";
-import { AxiosError } from 'axios';
+import { useState } from 'react';
 
 const createUserFormSchema = z.object({
     nome: z.string().min(1, 'Nome é necessário'),
@@ -53,11 +51,6 @@ type AddressProps = {
 }
 
 export function RegisterPage() {
-
-    const navigate = useNavigate();
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { 
         handleSubmit,
         register,
@@ -72,7 +65,7 @@ export function RegisterPage() {
         defaultValues: {
             cep: '',
             logradouro: '',
-            numero: 0,
+            // numero: 0,
             cidade: '',
             bairro: ''
         }
@@ -95,32 +88,10 @@ export function RegisterPage() {
         try {
             const response = await api.post('/usuario', payload);
             console.log(response.data);
-            
-            if(response.status === 200 || response.status === 201){
-                setSuccessMessage("Cadastro realizado com sucesso!");
-            }
-
         } catch (error) {
             console.error("Erro ao enviar dados para a API", error);
-            const axiosError = error as AxiosError;
-            if (axiosError.response && axiosError.response.status === 400) {
-                setErrorMessage((axiosError.response.data as { error: string }).error);
-            } else {
-                setErrorMessage("Ocorreu um problema. Por favor, tente novamente mais tarde.");
-            }
         }
     }
-
-    const closeSuccessModal = () => {
-        navigate('/');
-        setSuccessMessage(null);
-    };
-    
-
-    const closeErrorModal = () => {
-        setModalOpen(false);
-        setErrorMessage(null);
-    };
 
     const handleSetData = useCallback((data: AddressProps) => {
         setValue('cidade', data.localidade);
@@ -360,9 +331,6 @@ export function RegisterPage() {
                             </Link>
                         </div>
                     </form>
-                    {errorMessage && <ErrorModal message={errorMessage} onClose={closeErrorModal} />}
-                    {successMessage && <SuccessModal message={successMessage} onClose={closeSuccessModal} />}
-
                 </div>
             </div>
             <ImageCard imagem={jayslogo} />

@@ -15,8 +15,6 @@ import ErrorModal from "../components/ErrorModal";
 const styleP = "text-xs font-semibold text-red-500"
 
 
-
-
 const loginFormSchema = z.object({
   email: z.string().email('Email inválido'),
   senha: z.string().min(1, 'Digite sua senha'),

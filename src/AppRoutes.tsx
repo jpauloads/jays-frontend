@@ -3,6 +3,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { SendRedefinePass } from "./pages/SendRedefinePass";
 import { NewPasswordPage } from "./pages/NewPasswordPage";
+import { UpdateProfilePage } from "./pages/UpdateProfilePage";
 
 export const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ export const AppRoutes = () => {
         <Route path="/cadastro" element={<RegisterPage />} />
         <Route path="/redefinirsenha" element={<SendRedefinePass />} />
         <Route path="/novasenha" element={<NewPasswordPage />} />
+        <Route path="/atualizardados" element={<UpdateProfilePage />} />
       </Routes>
     </Router>
   );

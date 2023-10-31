@@ -11,7 +11,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ message, onClose }) => {
             <div className="bg-white rounded p-8 w-11/12 md:w-1/3">
                 <h2 className="text-2xl mb-4">Erro</h2>
                 <p>{message}</p>
-                <button onClick={onClose} className="mt-4 px-4 py-2 bg-red-500 text-white rounded">Fechar</button>
+                <button onClick={onClose} className="mt-4 px-4 py-2 bg-jays-orange text-white rounded">Fechar</button>
             </div>
         </div>
     );

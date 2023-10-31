@@ -93,7 +93,7 @@ export function RegisterPage() {
         console.log(payload);
 
         try {
-            const response = await api.post('/usuario', payload);
+            const response = await api.post('/usuario/cadastro', payload);
             console.log(response.data);
             
             if(response.status === 200 || response.status === 201){
@@ -258,7 +258,7 @@ export function RegisterPage() {
                         </div>
                     </div>
     
-                        {/* Campos de CEP e Estado (que será populado automaticamente) */}
+                        {/* Campos de CEP e Estado*/}
                         <div className="flex flex-wrap -mx-3 mb-4">
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <label className="block text-gray-500 text-base mb-0">

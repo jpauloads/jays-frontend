@@ -11,10 +11,10 @@ export function Header() {
         <>
             <div className="p-5">
                 <nav className="flex items-center justify-between">
-                    <h1 className="text-gray">Jays</h1>
+                    <h1 className="text-white">Jays</h1>
                     <ul className="flex justify-center items-center text-white">
                         <li className="pr-3">
-                        <button><Link to="#">Início</Link></button></li>
+                        <button><Link to="/">Início</Link></button></li>
                         <li className="pr-3">
                             <button><Link to="#">Sobre nós</Link></button>
                         </li>

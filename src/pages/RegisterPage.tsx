@@ -56,8 +56,8 @@ export function RegisterPage() {
 
     const navigate = useNavigate();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [isModalOpen, setModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isModalOpen, setModalOpen] = useState(false);
     const { 
         handleSubmit,
         register,
@@ -90,7 +90,7 @@ export function RegisterPage() {
         }
         
         const { confirmPassword, ...payload } = data;
-        console.log(payload);
+        // console.log(payload);
 
         try {
             const response = await api.post('/usuario/cadastro', payload);

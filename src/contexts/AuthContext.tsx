@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useState, useEffect } from 'react';
 
 type AuthContextType = {
   user: UserType | null;
@@ -14,6 +14,7 @@ type UserType = {
   id: string;
   login: string;
   email: string;
+  accessToken: string;
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -23,8 +24,17 @@ export const AuthContext = createContext<AuthContextType>(
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserType | null>(null);
 
+  useEffect(() => {
+    // Tenta recuperar os dados do usuário do localStorage quando o componente é montado
+    const storedUser = localStorage.getItem('userData');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const login = (userData: UserType) => {
     setUser(userData);
+    localStorage.removeItem('userData');
   };
 
   const logout = () => {

@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "../lib/axios";
-// import { SHA256 } from "crypto-js";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import ErrorModal from "../components/ErrorModal";
@@ -38,7 +37,6 @@ export function LoginPage() {
 
   const handleFormSubmit = async (data: LoginFormInput) => {
     try {
-      // const encryptedPassword = SHA256(data.senha).toString();
       const payload = { email: data.email, senha: data.senha };
       
       const response = await api.post('/usuario/login', payload);
@@ -56,31 +54,6 @@ export function LoginPage() {
       );
     }
   };
-
-  // const handleFormSubmit = async (data: LoginFormInput) => {
-  //     try {
-  //         const encryptedPassword = SHA256(data.senha).toString();
-  //         const payload = { email: data.email, senha: encryptedPassword };
-
-  //         const response = await api.post('/usuario', payload);
-
-  //         if (response.status === 200) {
-  //             login(response.data);
-  //             alert("Login bem-sucedido!");
-  //             // history.push('/dashboard');
-  //         } else {
-  //             alert("Falha ao realizar login");
-  //             console.error("Erro ao fazer login");
-  //         }
-  //     } catch (error) {
-  //         console.error("Erro na chamada da API", error);
-  //         setErrorMessage("Ocorreu um problema ao tentar fazer login. Por favor, tente novamente mais tarde.");
-  //     }
-  // };
-
-//   const handleOpenRedirectModal = () => {
-//     setRedirectModalOpen(true);
-//   };
 
   const handleConfirmRedirect = () => {
     navigate("/atualizardados");
@@ -159,11 +132,6 @@ export function LoginPage() {
                     Login
                   </button>
 
-                  {/* <button
-                                        // onClick={signInWithGoogle}
-                                        className='bg-white mt-11 font-semibold h-8 border border-gray-500 rounded-md w-10/12'>
-                                        Login com o Google
-                                    </button> */}
                   <div className="pt-8 text-xs text-right">
                     Não tem uma conta?{" "}
                     <Link

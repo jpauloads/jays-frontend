@@ -68,9 +68,9 @@ export function Menu({ onClick }: MenuProps) {
       {/* Serviços */}
       <button 
         className={box}
-        onClick={() => handleButtonClick('servicos')}
+        onClick={() => handleButtonClick('servico')}
       >
-        <div className={`w-1.5 h-14 flex-col justify-center items-center inline-flex ${isSelected('servicos') ? '' : 'hidden'}`}>
+        <div className={`w-1.5 h-14 flex-col justify-center items-center inline-flex ${isSelected('servico') ? '' : 'hidden'}`}>
           <div className="w-1.5 h-14 bg-orange-600 rounded-3xl" />
         </div>
         {/* Ícone do Endereço */}
@@ -79,7 +79,7 @@ export function Menu({ onClick }: MenuProps) {
         </div>
         <div className='w-full text-start'>
           <span className="font-bold">Serviço</span>
-          <p className="w-full text-sm">Ver e alterar seu serviço</p>
+          <p className="w-full text-sm">Ver e criar/alterar seu serviço</p>
         </div>
         <div className="p-2 rounded-full mr-2">
           <img className='' src={arrow_icon} alt='Seta' />

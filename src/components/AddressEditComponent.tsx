@@ -11,6 +11,7 @@ import SuccessModal from "./SuccessModal";
 import { AuthContext } from '../contexts/AuthContext';
 
 interface AddressEditComponentProps {
+  addressId: string,
   onClick: (section: string) => void;
 }
 
@@ -44,7 +45,7 @@ type AddressProps = {
   estado: string;
 };
 
-export function AddressEditComponent({ onClick }: AddressEditComponentProps) {
+export function AddressEditComponent({ addressId, onClick }: AddressEditComponentProps) {
   const { user } = useContext(AuthContext);
   const [selectedSection, setSelectedSection] =
     useState<string>("editarendereco");
@@ -89,11 +90,12 @@ const handleFormSubmit = async (data: CreateUserFormData) => {
 
   const payload = {
     ...data,
-    id: user.id 
+    id: addressId
   };
 
   try {
-      const response = await api.put('/updateCadastro', payload);
+      console.log(payload);
+      const response = await api.put('/usuario/updateEndereco', payload);
       console.log(response.data);
       
       if(response.status === 200 || response.status === 201){
@@ -115,7 +117,6 @@ const closeSuccessModal = () => {
   handleButtonClick('enderecos');
   setSuccessMessage(null);
 };
-
 
 const closeErrorModal = () => {
   setModalOpen(false);

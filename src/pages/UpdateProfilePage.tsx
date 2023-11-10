@@ -1,52 +1,110 @@
-import { useState } from 'react';
-import { Header } from '../components/Header';
-import { Menu } from '../components/Menu';
-import { AddressCard } from '../components/AddressCard';
-import { AddressEditComponent } from '../components/AddressEditComponent';
+import { useContext, useState, useEffect } from "react";
+import { Header } from "../components/Header";
+import { Menu } from "../components/Menu";
+import { AddressCard } from "../components/AddressCard";
+import { AddressEditComponent } from "../components/AddressEditComponent";
+import { AuthContext } from "../contexts/AuthContext";
+import { api } from "../lib/axios";
 
 export function UpdateProfilePage() {
-  const [currentSection, setCurrentSection] = useState('cadastro');
+  const [currentSection, setCurrentSection] = useState("cadastro");
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const { user } = useContext(AuthContext);
+
+  type AddressType = {
+    id: string;
+    tipo_endereco: string;
+    cep: string;
+    estado: string;
+    cidade: string;
+    logradouro: string;
+    bairro: string;
+    numero: number;
+    id_usuario: string;
+    id_servico: string | null;
+  };
+
+  // const fetchAddresses = async () => {
+  //   try {
+  //     console.log(user?.id);
+  //     const response = await api.get("/usuario/enderecos", {
+  //       params: { userId: user?.id },
+  //     });
+  //     setAddresses(response.data);
+  //   } catch (error) {
+  //     console.error("Erro ao buscar os endereços", error);
+  //   }
+  // };
+
+  // Efeito para buscar os endereços quando o componente é montado ou quando o `currentSection` é alterado para 'enderecos'
+  useEffect(() => {
+    if (currentSection === "enderecos" && user && user.id) {
+      fetchAddresses();
+    }
+  }, [currentSection, user]);
+
+  const fetchAddresses = async () => {
+    // Certifica-se de que o user está definido
+    if (user && user.id) {
+      try {
+        const response = await api.get("/usuario/enderecos", {
+          params: { userId: user.id },
+        });
+        setAddresses(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar os endereços", error);
+      }
+    }
+  };
+
+  const formatAddress = (address: AddressType) => {
+    return `${address.logradouro}, ${address.numero} ${address.bairro}, ${address.cidade}, ${address.estado} CEP: ${address.cep}`;
+  };
+
   return (
     <div className="min-h-screen bg-jays-orange">
       <Header />
       <div className="flex justify-around w-full p-10">
-
         <Menu onClick={setCurrentSection} />
 
-        {currentSection === 'cadastro' && (
-            <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
+        {currentSection === "cadastro" && (
+          <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
             <h2 className="mb-5 text-xl font-bold">Atualize seu cadastro</h2>
             {/* Componente de atualizar cadastro */}
-            <AddressCard address="Av, Ubirajara Pedro da Cruz, 164 Jardim Eldorado, Uberaba, MG CEP: 3807654" onClick={setCurrentSection}/>
-
           </div>
         )}
-        {currentSection === 'enderecos' && (
-          <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
-            <h2 className="mb-5 text-xl font-bold">Endereços</h2>
-            <div className='grid grid-cols-3 gap-4'>
-            <AddressCard address="Av, Ubirajara Pedro da Cruz, 164 Jardim Eldorado, Uberaba, MG CEP: 3807654" onClick={setCurrentSection}/>
-            <AddressCard address="Av, Ubirajara Pedro da Cruz, 164 Jardim Eldorado, Uberaba, MG CEP: 3807654" onClick={setCurrentSection}/>
-            <AddressCard address="Av, Ubirajara Pedro da Cruz, 164 Jardim Eldorado, Uberaba, MG CEP: 3807654" onClick={setCurrentSection}/>
-            <AddressCard address="Av, Ubirajara Pedro da Cruz, 164 Jardim Eldorado, Uberaba, MG CEP: 3807654" onClick={setCurrentSection}/>
-            </div>
-            {/* Outros endereços aqui */}
-          </div>
-        )}
-        {currentSection === 'servico' && (
+        {currentSection === "enderecos" && (
+      <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
+        <h2 className="mb-5 text-xl font-bold">Endereços</h2>
+        <div className="grid grid-cols-3 gap-4">
+          {addresses.map((address: AddressType) => (
+            <AddressCard
+              key={address.id}
+              id={address.id}
+              address={formatAddress(address)}
+              onClick={(section, id) => {
+                console.log(id);
+                setCurrentSection(section);
+                setSelectedAddressId(id);
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+        {currentSection === "servico" && (
           <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
             <h2 className="mb-5 text-xl font-bold">Cadastre um serviço</h2>
-            <AddressCard address="Av, Ubirajara Pedro da Cruz, 164 Jardim Eldorado, Uberaba, MG CEP: 3807654" onClick={setCurrentSection}/>
-
           </div>
         )}
-        {currentSection === 'editarendereco' && (
-          <div className='w-9/12 p-5 bg-white rounded-3xl shadow'>
+        {currentSection === "editarendereco" && selectedAddressId &&(
+          <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
             <h2 className="mb-5 text-xl font-bold">Editar Endereço</h2>
-            <AddressEditComponent onClick={setCurrentSection}/>
+            <AddressEditComponent addressId={selectedAddressId} onClick={setCurrentSection} />
           </div>
         )}
-        
+
         {/* Aqui você pode adicionar outros conteúdos baseados em currentSection */}
       </div>
     </div>

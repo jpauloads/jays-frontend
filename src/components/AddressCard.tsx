@@ -1,17 +1,18 @@
 import { useState } from 'react';
 
 interface AddressProps {
+  id: string;
   address: string;
-  onClick: (section: string) => void;
+  onClick: (section: string, id: string) => void;
 }
 
-export function AddressCard({ address, onClick }: AddressProps) {
+export function AddressCard({ id, address, onClick }: AddressProps) {
 
   const [selectedSection, setSelectedSection] = useState<string>('enderecos');
 
   const handleButtonClick = (section: string) => {
     setSelectedSection(section);
-    onClick(section);
+    onClick(section, id);
   };
 
   return (

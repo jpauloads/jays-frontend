@@ -34,11 +34,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = (userData: UserType) => {
     setUser(userData);
-    localStorage.removeItem('userData');
+    // Armazena os dados do usuário no localStorage para manter o usuário logado entre as sessões
+    localStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
+    // Remove os dados do usuário do localStorage quando o usuário faz logout
+    localStorage.removeItem('userData');
   };
 
   return (

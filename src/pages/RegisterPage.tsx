@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useState } from "react";
 import axios from 'axios';
-import { zipCodeMask, cpfMask } from "../utils/masks";
+import { zipCodeMask, cpfMask, phoneMask } from "../utils/masks";
 import { api } from "../lib/axios";
 import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
@@ -15,22 +15,26 @@ import { AxiosError } from 'axios';
 const createUserFormSchema = z.object({
     nome: z.string().min(1, 'Nome é necessário'),
     documento: z.string().length(14, 'CPF inválido'),
-    cep: z.string().min(9, 'Por favor, informe um CEP válido'),
+    cep: z.string().min(9, 'CEP inválido'),
     logradouro: z.string().min(1, 'Por favor, uma rua válida'),
     numero: z.number().min(1, 'Escreva um número'),
     cidade: z.string().min(1, 'Por favor, informe uma cidade válida'),
     bairro: z.string().min(1, 'Campo inválido'),
     descricao: z.string().default('CPF'),
-    login: z.string().min(4, 'Username deve ter pelo menos 4 caracteres'),
+    // login: z.string().min(4, 'Username deve ter pelo menos 4 caracteres'),
+    telefone: z.string().min(1, 'Digite um telefone válido'),
     email: z.string().email('Email inválido'),
     senha: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres'),
-    confirmPassword: z.string().min(8, 'Confirmação de senha deve ter pelo menos 8 caracteres').optional()
+    confirmPassword: z.string().min(8, 'Confirmação de senha deve ter pelo menos 8 caracteres').optional(),
+    estado: z.string().min(1, "Campo inválido"),
+    nascimento: z.string().min(1, "Data inválida"),
 }).transform((field) => ({
     nome: field.nome,
     email: field.email,
     senha: field.senha,
     confirmPassword: field.confirmPassword,
-    login: field.login,
+    // login: field.login,
+    telefone: field.telefone,
     documento: field.documento,
     cep: field.cep,
     logradouro: field.logradouro,
@@ -38,7 +42,8 @@ const createUserFormSchema = z.object({
     cidade: field.cidade,
     numero: field.numero,
     descricao: field.descricao,
-
+    estado: field.estado,
+    dt_nasc: field.nascimento,
 }));
 
 const styleP = "text-xs font-semibold text-red-500"
@@ -50,6 +55,7 @@ type AddressProps = {
     localidade: string;
     uf: string;
     bairro: string;
+    estado: string;
 }
 
 export function RegisterPage() {
@@ -72,9 +78,10 @@ export function RegisterPage() {
         defaultValues: {
             cep: '',
             logradouro: '',
-            numero: 0,
+            // numero: 0,
             cidade: '',
-            bairro: ''
+            bairro: '',
+            estado: '',
         }
     });
 
@@ -90,7 +97,7 @@ export function RegisterPage() {
         }
         
         const { confirmPassword, ...payload } = data;
-        // console.log(payload);
+        console.log(payload);
 
         try {
             const response = await api.post('/usuario/cadastro', payload);
@@ -126,6 +133,7 @@ export function RegisterPage() {
         setValue('cidade', data.localidade);
         setValue('logradouro', data.logradouro);
         setValue('bairro', data.bairro);
+        setValue('estado', data.uf);
     }, [])
 
     const handleFetchAddress = useCallback(async (zipCode: string) => {
@@ -145,7 +153,7 @@ export function RegisterPage() {
 
     return (
         <>
-        <div className="w-screen h-screen flex flex-wrap items-center justify-center">
+        <div className="flex flex-wrap items-center justify-center">
             <div className="flex">
             <div className="bg-white rounded-bl-2xl rounded-tl-2xl p-10 shadow-lg w-full">
                 <h2 className="text-2xl font-semibold text-start font-['Raleway']">Jay's</h2>
@@ -171,22 +179,8 @@ export function RegisterPage() {
                             </div>
                         </div>
     
-                        {/* Campo de CPF */}
+                        {/* Campo de CPF e Telefone */}
                         <div className="flex flex-wrap -mx-3 mb-4">
-                        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label className="block text-gray-500 text-base mb-0">
-                                Username
-                            </label>
-                            <input 
-                                {...register('login')}
-                                className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" 
-                                id="grid-username" 
-                                type="text">
-                            </input>
-                            {errors.login?.message && (
-                                <p className={styleP}>{errors.login?.message}</p>
-                            )}
-                        </div>
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <label className="block text-gray-500 text-base mb-0">
                                     CPF
@@ -206,9 +200,29 @@ export function RegisterPage() {
                                     <p className={styleP}>{errors.documento?.message}</p>
                                 )}
                             </div>
+                        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label className="block text-gray-500 text-base mb-0">
+                                Telefone
+                            </label>
+                            <input 
+                                {...register('telefone')}
+                                className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" 
+                                id="grid-telefone" 
+                                type="text"
+                                placeholder="(xx)xxxxx-xxxx"
+                                onChange={(e) => {
+                                    e.target.value = phoneMask(e.target.value);
+                                    setValue('telefone', e.target.value);
+                                }}
+                                >
+                            </input>
+                            {errors.telefone?.message && (
+                                <p className={styleP}>{errors.telefone?.message}</p>
+                            )}
                         </div>
-                        <div className="flex flex-wrap -mx-3 mb-4">
-                        <div className="w-full px-3">
+                        </div>
+                    <div className="flex flex-wrap -mx-3 mb-4">
+                        <div className="w-full md:w-3/5 px-3 mb-6 md:mb-0">
                             <label className="block text-gray-500 text-base mb-0">
                                 Email
                             </label>
@@ -220,6 +234,22 @@ export function RegisterPage() {
                             </input>
                             {errors.email?.message && (
                                 <p className={styleP}>{errors.email?.message}</p>
+                            )}
+                        </div>
+
+                        <div className="w-full md:w-2/5 px-3 mb-6 md:mb-0">
+                            <label className="block text-gray-500 text-base mb-0">
+                                Data nasc.
+                            </label>
+                            <input 
+                                {...register('dt_nasc')}
+                                className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
+                                id="grid-nascimento" 
+                                type="date"
+                                >
+                            </input>
+                            {errors.dt_nasc?.message && (
+                                <p className={styleP}>{errors.dt_nasc?.message}</p>
                             )}
                         </div>
                     </div>
@@ -273,6 +303,22 @@ export function RegisterPage() {
                                 </input>
                                 {errors.cep?.message && (
                                     <p className={styleP}>{errors.cep?.message}</p>
+                                )}
+                            </div>
+
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label className="block text-gray-500 text-base mb-0">
+                                    Estado
+                                </label>
+                                <input 
+                                    {...register('estado')}
+                                    maxLength={3}
+                                    className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" 
+                                    type="text" 
+                                    placeholder="UF">
+                                </input>
+                                {errors.estado?.message && (
+                                    <p className={styleP}>{errors.estado?.message}</p>
                                 )}
                             </div>
                         </div>

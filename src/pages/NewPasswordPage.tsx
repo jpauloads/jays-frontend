@@ -15,8 +15,8 @@ const styleP = "text-xs font-semibold text-red-500";
 
 const loginFormSchema = z.object({
   codigo: z.number(),
-  senha: z.string().min(1, "Digite sua senha"),
-  confirmaSenha: z.string().min(1, "Digite sua senha")
+  senha: z.string().min(8, "A senha deve conter ao menos 8 caracteres"),
+  confirmaSenha: z.string().min(8, "A senha deve conter ao menos 8 caracteres")
 });
 
 type LoginFormInput = z.infer<typeof loginFormSchema>;
@@ -81,22 +81,20 @@ export function NewPasswordPage() {
             <div className="flex justify-center items-center max-w-md">
               <form onSubmit={handleSubmit(handleFormSubmit)} className="container flex flex-col gap-4 p-4">
                 <div className="mb-1">
-                  <label className="mb-2 block" htmlFor="password">
+                  <label className="mb-2 block">
                     Código de verificação
                   </label>
                   <input
-                    {...register("codigo")}
+                    {...register("codigo", {valueAsNumber: true})}
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="number"
-                    id="verification-code"
-                    name="verification-code"
                   />
                   {errors.codigo?.message && (
                     <p className={styleP}>{errors.codigo?.message}</p>
                   )}
                 </div>
                 <div className="mb-1">
-                  <label className="mb-2 block" htmlFor="password">
+                  <label className="mb-2 block">
                     Password
                   </label>
                   <input
@@ -104,15 +102,14 @@ export function NewPasswordPage() {
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="******************"
                     type="password"
-                    id="password"
-                    name="password"
+                    
                   />
                   {errors.senha?.message && (
                     <p className={styleP}>{errors.senha?.message}</p>
                   )}
                 </div>
                 <div className="mb-1">
-                  <label className="mb-2 block" htmlFor="confirm-password">
+                  <label className="mb-2 block">
                     Confirmar nova senha
                   </label>
                   <input
@@ -120,8 +117,7 @@ export function NewPasswordPage() {
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="******************"
                     type="password"
-                    id="confirm-password"
-                    name="confirm-password"
+                    
                   />
                   {errors.confirmaSenha?.message && (
                     <p className={styleP}>{errors.confirmaSenha?.message}</p>

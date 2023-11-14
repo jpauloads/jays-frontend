@@ -11,9 +11,8 @@ type AuthProviderProps = {
 };
 
 type UserType = {
-  id: string;
-  login: string;
-  email: string;
+  UserID: string;
+  Email: string;
   accessToken: string;
 };
 

@@ -5,6 +5,7 @@ import { AddressCard } from "../components/AddressCard";
 import { AddressEditComponent } from "../components/AddressEditComponent";
 import { AuthContext } from "../contexts/AuthContext";
 import { api } from "../lib/axios";
+import { ServiceRegisterComponent } from "../components/ServiceRegisterComponent";
 
 export function UpdateProfilePage() {
   const [currentSection, setCurrentSection] = useState("cadastro");
@@ -25,32 +26,20 @@ export function UpdateProfilePage() {
     id_servico: string | null;
   };
 
-  // const fetchAddresses = async () => {
-  //   try {
-  //     console.log(user?.id);
-  //     const response = await api.get("/usuario/enderecos", {
-  //       params: { userId: user?.id },
-  //     });
-  //     setAddresses(response.data);
-  //   } catch (error) {
-  //     console.error("Erro ao buscar os endereços", error);
-  //   }
-  // };
-
   // Efeito para buscar os endereços quando o componente é montado ou quando o `currentSection` é alterado para 'enderecos'
   useEffect(() => {
-    if (currentSection === "enderecos" && user && user.id) {
+    if (currentSection === 'enderecos' && user && user.UserID) {
       fetchAddresses();
     }
   }, [currentSection, user]);
 
   const fetchAddresses = async () => {
     // Certifica-se de que o user está definido
-    if (user && user.id) {
+    if (user && user.UserID) {
       try {
-        const response = await api.get("/usuario/enderecos", {
-          params: { userId: user.id },
-        });
+        console.log(user.UserID)
+        const response = await api.get(`/usuario/enderecos/${user.UserID}`);
+        console.log("Endereços recebidos:", response.data);
         setAddresses(response.data);
       } catch (error) {
         console.error("Erro ao buscar os endereços", error);
@@ -96,6 +85,7 @@ export function UpdateProfilePage() {
         {currentSection === "servico" && (
           <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
             <h2 className="mb-5 text-xl font-bold">Cadastre um serviço</h2>
+            <ServiceRegisterComponent />
           </div>
         )}
         {currentSection === "editarendereco" && selectedAddressId &&(

@@ -1,4 +1,72 @@
+// import React from "react";
+import { ImageCard } from "../components/ImageCard";
+import jayslogo from "../assets/images/jayslogo.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "../lib/axios";
+import { useContext, useState } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import ErrorModal from "../components/ErrorModal";
+import { RedirectModal } from "../components/RedirectModal";
+
+const styleP = "text-xs font-semibold text-red-500";
+
+const loginFormSchema = z.object({
+  codigo: z.number(),
+  senha: z.string().min(1, "Digite sua senha"),
+  confirmaSenha: z.string().min(1, "Digite sua senha")
+});
+
+type LoginFormInput = z.infer<typeof loginFormSchema>;
+
 export function NewPasswordPage() {
+
+  const navigate = useNavigate();
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [isRedirectModalOpen, setRedirectModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginFormInput>({
+        resolver: zodResolver(loginFormSchema),
+    });
+
+  const { login } = useContext(AuthContext);
+
+  const handleFormSubmit = async (data: LoginFormInput) => {
+    console.log('Form submitted:', data);
+    if (data.senha !== data.confirmaSenha) {
+      setErrorMessage("As senhas não coincidem");
+      return;
+    }
+    try {
+      const payload = { cod_verificacao: data.codigo, senha: data.senha };
+
+      const response = await api.post('/usuario/novasenha', payload);
+      if (response.status === 200) {
+        login(response.data);
+        window.alert("Senha alterada com sucesso!");
+        navigate("/");
+      } else if (response.status != 200) {
+        setErrorMessage("Código inválido");
+      }
+    } catch (error) {
+      console.error("Erro na chamada da API", error);
+      setErrorMessage(
+        "Ocorreu um problema ao tentar alterar sua senha. Por favor, tente novamente mais tarde."
+      );
+    }
+  };
+
+  const closeErrorModal = () => {
+    setModalOpen(false);
+    setErrorMessage(null);
+  };
+
   return (
     <>
       <div className="w-screen flex flex-wrap items-center justify-center">
@@ -11,41 +79,53 @@ export function NewPasswordPage() {
               Preencha os dados abaixo para recuperar sua senha
             </h2>
             <div className="flex justify-center items-center max-w-md">
-              <form className="container flex flex-col gap-4 p-4">
+              <form onSubmit={handleSubmit(handleFormSubmit)} className="container flex flex-col gap-4 p-4">
                 <div className="mb-1">
                   <label className="mb-2 block" htmlFor="password">
                     Código de verificação
                   </label>
                   <input
+                    {...register("codigo")}
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="number"
                     id="verification-code"
                     name="verification-code"
                   />
+                  {errors.codigo?.message && (
+                    <p className={styleP}>{errors.codigo?.message}</p>
+                  )}
                 </div>
                 <div className="mb-1">
                   <label className="mb-2 block" htmlFor="password">
                     Password
                   </label>
                   <input
+                    {...register("senha")}
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="******************"
                     type="password"
                     id="password"
                     name="password"
                   />
+                  {errors.senha?.message && (
+                    <p className={styleP}>{errors.senha?.message}</p>
+                  )}
                 </div>
                 <div className="mb-1">
                   <label className="mb-2 block" htmlFor="confirm-password">
                     Confirmar nova senha
                   </label>
                   <input
+                    {...register("confirmaSenha")}
                     className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="******************"
                     type="password"
                     id="confirm-password"
                     name="confirm-password"
                   />
+                  {errors.confirmaSenha?.message && (
+                    <p className={styleP}>{errors.confirmaSenha?.message}</p>
+                  )}
                 </div>
                 <button
                   className="w-full bg-jays-orange text-white py-2 px-4 rounded hover:bg-jays-hover transition-bg duration-300"
@@ -54,6 +134,9 @@ export function NewPasswordPage() {
                   Salvar nova senha
                 </button>
               </form>
+              {errorMessage && (
+                <ErrorModal message={errorMessage} onClose={closeErrorModal} />
+              )}
             </div>
           </div>
         </div>

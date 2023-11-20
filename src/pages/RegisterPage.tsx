@@ -31,7 +31,7 @@ const createUserFormSchema = z
       .min(8, "Confirmação de senha deve ter pelo menos 8 caracteres")
       .optional(),
     estado: z.string().min(1, "Campo inválido"),
-    nascimento: z.string().min(1, "Data inválida"),
+    dt_nasc: z.string().min(1, "Data inválida"),
   })
   .transform((field) => ({
     nome: field.nome,
@@ -48,7 +48,7 @@ const createUserFormSchema = z
     numero: field.numero,
     descricao: field.descricao,
     estado: field.estado,
-    dt_nasc: field.nascimento,
+    dt_nasc: field.dt_nasc,
   }));
 
 const styleP = "text-xs font-semibold text-red-500";
@@ -157,7 +157,7 @@ export function RegisterPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-center">
+      <div className="w-screen h-screen flex flex-wrap items-center justify-center">
         <div className="flex">
           <div className="bg-white rounded-bl-2xl rounded-tl-2xl p-10 shadow-lg w-full">
             <h2 className="text-2xl font-semibold text-start font-['Raleway']">
@@ -168,7 +168,7 @@ export function RegisterPage() {
             </h1>
             <div className="flex justify-center">
               <form
-                onSubmit={handleSubmit(handleFormSubmit)}
+              onSubmit={handleSubmit(handleFormSubmit)}
                 className="w-9/12 max-w-2xl"
               >
                 {/* Campos de Nome e Sobrenome */}

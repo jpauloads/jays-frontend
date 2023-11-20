@@ -186,12 +186,12 @@
 //                                     Nome Completo
 //                                 </label>
 //                                 <input 
-//                                     {...register('nome')}
+//                                     {...register('nome_empresa')}
 //                                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" 
 //                                     type="text">
 //                                 </input>
-//                                 {errors.nome?.message && (
-//                                     <p className={styleP}>{errors.nome?.message}</p>
+//                                 {errors.nome_empresa?.message && (
+//                                     <p className={styleP}>{errors.nome_empresa?.message}</p>
 //                                 )}
 //                             </div>
 //                         </div>
@@ -203,18 +203,18 @@
 //                                     CPF
 //                                 </label>
 //                                 <input 
-//                                     {...register('documento')}
+//                                     {...register('cnpj')}
 //                                     maxLength={14}
 //                                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" 
 //                                     type="text" 
-//                                     onChange={(e) => {
-//                                         e.target.value = cpfMask(e.target.value);
-//                                         setValue('documento', e.target.value);
-//                                     }} 
+//                                     // onChange={(e) => {
+//                                     //     e.target.value = cpfMask(e.target.value);
+//                                     //     setValue('cnpj', e.target.value);
+//                                     // }} 
 //                                 >
 //                                 </input>
-//                                 {errors.documento?.message && (
-//                                     <p className={styleP}>{errors.documento?.message}</p>
+//                                 {errors.cnpj?.message && (
+//                                     <p className={styleP}>{errors.cnpj?.message}</p>
 //                                 )}
 //                             </div>
 //                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">

@@ -1,5 +1,4 @@
 // import React from "react";
-import { ImageCard } from "../components/ImageCard";
 import jayslogo from "../assets/images/jayslogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -9,7 +8,6 @@ import { api } from "../lib/axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import ErrorModal from "../components/ErrorModal";
-import { RedirectModal } from "../components/RedirectModal";
 
 const styleP = "text-xs font-semibold text-red-500";
 

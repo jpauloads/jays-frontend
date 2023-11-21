@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthContext";
 import jaysimg from "../assets/images/jayslogo.png";
@@ -111,6 +111,7 @@ export function UserProfileComponent() {
                   </label>
                   <input
                     {...register("nome")}
+
                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                   ></input>

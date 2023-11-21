@@ -17,7 +17,7 @@ const updateUserFormData = z
     telefone: z.string().min(1, "Digite um telefone válido"),
     email: z.string().email("Email inválido"),
     senha: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
-    nascimento: z.string().min(1, "Data inválida"),
+    dt_nasc: z.string().min(1, "Data inválida"),
   })
   .transform((field) => ({
     nome: field.nome,
@@ -25,7 +25,7 @@ const updateUserFormData = z
     senha: field.senha,
     telefone: field.telefone,
     documento: field.documento,
-    dt_nasc: field.nascimento,
+    dt_nasc: field.dt_nasc,
   }));
 
 type UserProfileFormData = z.infer<typeof updateUserFormData>;

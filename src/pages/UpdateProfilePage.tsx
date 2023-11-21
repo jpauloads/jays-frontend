@@ -6,7 +6,7 @@ import { AddressEditComponent } from "../components/AddressEditComponent";
 import { AuthContext } from "../contexts/AuthContext";
 import { api } from "../lib/axios";
 import { UserProfileComponent } from "../components/UserProfileComponent";
-// import { ServiceRegisterComponent } from "../components/ServiceRegisterComponent";
+import { ServiceRegisterComponent } from "../components/ServiceRegisterComponent";
 
 export function UpdateProfilePage() {
   const [currentSection, setCurrentSection] = useState("cadastro");
@@ -86,7 +86,7 @@ export function UpdateProfilePage() {
         {currentSection === "servico" && (
           <div className="w-9/12 p-5 bg-white rounded-3xl shadow">
             <h2 className="mb-5 text-xl font-bold">Cadastre um serviço</h2>
-            {/* <ServiceRegisterComponent /> */}
+            <ServiceRegisterComponent />
           </div>
         )}
         {currentSection === "editarendereco" && selectedAddressId &&(

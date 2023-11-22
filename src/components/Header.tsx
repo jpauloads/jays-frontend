@@ -18,7 +18,7 @@ export function Header() {
                     <h1 className="text-white">Jays</h1>
                     <ul className="flex justify-center items-center text-white">
                         <li className="pr-3">
-                            <button><Link to="/">Início</Link></button>
+                            <button><Link to="/home">Início</Link></button>
                         </li>
                         <li className="pr-3">
                             <button><Link to="#">Sobre nós</Link></button>

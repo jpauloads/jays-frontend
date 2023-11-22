@@ -60,7 +60,7 @@ export function LoginPage() {
   };
 
   const handleCancelRedirect = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   const closeErrorModal = () => {

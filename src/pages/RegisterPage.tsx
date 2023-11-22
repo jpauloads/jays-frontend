@@ -124,7 +124,7 @@ export function RegisterPage() {
   };
 
   const closeSuccessModal = () => {
-    navigate("/");
+    navigate("/login");
     setSuccessMessage(null);
   };
 
@@ -411,7 +411,7 @@ export function RegisterPage() {
                     Já possui cadastro?
                   </span>
                   <Link
-                    to="/"
+                    to="/login"
                     className="text-orange-700 text-sm font-semibold font-['Open Sans'] ml-2"
                   >
                     Log in

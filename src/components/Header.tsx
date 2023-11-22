@@ -1,8 +1,38 @@
+// import React from "react";
+import jayslogo from "../assets/images/jayslogo.png";
+import { z } from "zod";
 import { Link, useNavigate } from 'react-router-dom';
+import lupa from '../assets/images/icons/lupa.png'
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext'; // Ajuste o caminho conforme necessário
+import { api } from '../lib/axios';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const loginFormSchema = z.object({
+    pesquisaPorNome: z.string()
+});
+
+type LoginFormInput = z.infer<typeof loginFormSchema>;
 
 export function Header() {
+    const {
+        register,
+        handleSubmit
+    } = useForm<LoginFormInput>({
+        resolver: zodResolver(loginFormSchema),
+    });
+
+    const handleFormSubmit = async (data: LoginFormInput) => {
+        try {
+            console.log(data.pesquisaPorNome)
+            const response = await api.get(`/servico/buscaserviconome/nomeservico=${data.pesquisaPorNome}`);
+            console.log(response.data)
+        } catch (error) {
+            console.error("Erro na chamada da API", error);
+        }
+    };
+
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -16,6 +46,20 @@ export function Header() {
             <div className="p-5">
                 <nav className="flex items-center justify-between">
                     <h1 className="text-white">Jays</h1>
+                    <form onSubmit={handleSubmit(handleFormSubmit)}
+                        className="flex justify-center">
+                        <input type="text"
+                            className="text-center rounded-l-[4%] w-1/2 h-8 focus:outline-none"
+                            {...register("pesquisaPorNome")} />
+                        <div className="flex justify-center max-w-[6%] bg-jays-hover rounded-r-[4%]">
+                            <button type="submit" className="">
+                                <img
+                                    src={lupa}
+                                    alt="Enviar"
+                                    className="max-w-[80%] pl-2 " />
+                            </button>
+                        </div>
+                    </form>
                     <ul className="flex justify-center items-center text-white">
                         <li className="pr-3">
                             <button><Link to="/">Início</Link></button>
@@ -25,7 +69,7 @@ export function Header() {
                         </li>
                         <li className="pr-3">
                             {user ? (
-                                <button 
+                                <button
                                     onClick={handleLogout}
                                     className="hover:bg-jays-hover transition-bg duration-300 text-white font-bold py-2 px-4 rounded border border-white-500">
                                     Logout

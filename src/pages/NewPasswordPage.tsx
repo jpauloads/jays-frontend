@@ -8,6 +8,7 @@ import { api } from "../lib/axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import ErrorModal from "../components/ErrorModal";
+import SuccessModal from "../components/SuccessModal";
 
 const styleP = "text-xs font-semibold text-red-500";
 
@@ -25,6 +26,11 @@ export function NewPasswordPage() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [isRedirectModalOpen, setRedirectModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const { user } = useContext(AuthContext);
+  const [selectedSection, setSelectedSection] = useState<string>("editarendereco");
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
     const {
         register,
         handleSubmit,
@@ -47,8 +53,7 @@ export function NewPasswordPage() {
       const response = await api.post('/usuario/novasenha', payload);
       if (response.status === 200) {
         login(response.data);
-        window.alert("Senha alterada com sucesso!");
-        navigate("/");
+        setSuccessMessage("Senha redefinida com sucesso");
       } else if (response.status != 200) {
         setErrorMessage("Código inválido");
       }
@@ -58,6 +63,11 @@ export function NewPasswordPage() {
         "Ocorreu um problema ao tentar alterar sua senha. Por favor, tente novamente mais tarde."
       );
     }
+  };
+
+  const closeSuccessModal = () => {
+    navigate("/");
+    setSuccessMessage(null);
   };
 
   const closeErrorModal = () => {
@@ -128,6 +138,9 @@ export function NewPasswordPage() {
                   Salvar nova senha
                 </button>
               </form>
+              {successMessage && (
+                                    <SuccessModal message={successMessage} onClose={closeSuccessModal} />
+                                )}
               {errorMessage && (
                 <ErrorModal message={errorMessage} onClose={closeErrorModal} />
               )}

@@ -7,6 +7,7 @@ import { api } from "../lib/axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import ErrorModal from "../components/ErrorModal";
+import SuccessModal from "../components/SuccessModal";
 
 const styleP = "text-xs font-semibold text-red-500";
 
@@ -18,6 +19,10 @@ type LoginFormInput = z.infer<typeof loginFormSchema>;
 
 export function SendRedefinePass() {
 
+    const { user } = useContext(AuthContext);
+  const [selectedSection, setSelectedSection] = useState<string>("editarendereco");
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
     const navigate = useNavigate();
     const [isModalOpen, setModalOpen] = useState(false);
     const [isRedirectModalOpen, setRedirectModalOpen] = useState(false);
@@ -35,12 +40,10 @@ export function SendRedefinePass() {
     const handleFormSubmit = async (data: LoginFormInput) => {
         try {
             const payload = { email: data.email };
-            console.log("entro")
             const response = await api.post('/usuario/redefinirsenha', payload);
             if (response.status === 200) {
                 login(response.data);
-                window.alert("Email enviado com sucesso. Verifique seu e-mail para acessar o link de troca de senha.");
-                navigate("/login");
+                setSuccessMessage("Email enviado com sucesso. Verifique seu e-mail para acessar o link de troca de senha.");
             } else if (response.status != 200) {
                 setErrorMessage("Ocorreu um problema ao enviar o código. Por favor, tente novamente mais tarde.");
             }
@@ -51,6 +54,11 @@ export function SendRedefinePass() {
             );
         }
     };
+
+    const closeSuccessModal = () => {
+        navigate("/");
+        setSuccessMessage(null);
+      };
 
     const closeErrorModal = () => {
         setModalOpen(false);
@@ -77,6 +85,9 @@ export function SendRedefinePass() {
                                     <h3 className="item flex-grow text-2xl mt-4 font-semibold font-['Open Sans']">Será enviado um e-mail com as instruções para redefinir sua senha</h3>
                                     <button className="item flex-grow text-2xl rounded-[10px] bg-jays-orange text-white hover:cursor-pointer hover:bg-jays-hover transition-bg duration-300" type="submit">Enviar</button>
                                 </form>
+                                {successMessage && (
+                                    <SuccessModal message={successMessage} onClose={closeSuccessModal} />
+                                )}
                                 {errorMessage && (
                                     <ErrorModal message={errorMessage} onClose={closeErrorModal} />
                                 )}

@@ -13,7 +13,7 @@ export function Header() {
 
     return (
         <>
-            <div className="p-5">
+            <div className="bg-jays-orange p-5">
                 <nav className="flex items-center justify-between">
                     <h1 className="text-white">Jays</h1>
                     <ul className="flex justify-center items-center text-white">

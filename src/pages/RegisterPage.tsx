@@ -157,7 +157,7 @@ export function RegisterPage() {
 
   return (
     <>
-      <div className="w-screen h-screen flex flex-wrap items-center justify-center">
+      <div className="bg-jays-orange w-screen h-screen flex flex-wrap items-center justify-center">
         <div className="flex">
           <div className="bg-white rounded-bl-2xl rounded-tl-2xl p-10 shadow-lg w-full">
             <h2 className="text-2xl font-semibold text-start font-['Raleway']">

@@ -69,7 +69,7 @@ export function NewPasswordPage() {
 
   return (
     <>
-      <div className="w-screen flex flex-wrap items-center justify-center">
+      <div className="bg-jays-orange w-screen flex flex-wrap items-center justify-center">
         <div className="flex flex-col">
           <h1 className="text-center text-white text-5xl mt-20 mb-20">
             Criar Nova Senha

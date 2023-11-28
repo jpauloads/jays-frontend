@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { SetStateAction, useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { zipCodeMask } from "../utils/masks";
 import { api } from "../lib/axios";
@@ -10,15 +10,17 @@ import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import { AxiosError } from "axios";
 import { AuthContext } from "../contexts/AuthContext";
+import Select from "react-select";
 
 const serviceRegisterSchema = z
   .object({
     nome_empresa: z.string().min(1, "Nome da empresa é necessário"),
     preco: z.number().min(0, "Preço deve ser um valor positivo"),
     descricao: z.string(),
-    horario: z.string(),
-    forma_pagamento: z.array(z.number()),
-    tipoServico: z.string(),
+    horarioInicial: z.string(),
+    horarioFinal: z.string(),
+    forma_pagamento: z.array(z.number()).optional(),
+    tipoServico: z.string().optional(),
     domicilio: z.boolean(),
     cep: z.string().min(9, "CEP inválido"),
     logradouro: z.string().min(1, "Logradouro é necessário"),
@@ -33,7 +35,8 @@ const serviceRegisterSchema = z
     nome_empresa: field.nome_empresa,
     preco: field.preco,
     descricao: field.descricao,
-    horario: field.horario,
+    horarioInicial: field.horarioInicial,
+    horarioFinal: field.horarioFinal,
     forma_pagamento: field.forma_pagamento,
     domicilio: field.domicilio,
     tipoServico: field.tipoServico,
@@ -64,7 +67,23 @@ type AddressProps = {
   estado: string;
 };
 
+
+
 export function ServiceRegisterComponent() {
+  try{
+  const [selectedOption, setSelectedOption] = useState("none");
+  
+  const handleTypeSelect = (e: { value: SetStateAction<string>; }) => {
+    setSelectedOption(e.value);
+  };
+
+  const [tipoServicoSelecionado, setTipoServicoSelecionado] = useState<string | undefined>("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    setTipoServicoSelecionado(selectedValue);
+  };
+
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -83,7 +102,6 @@ export function ServiceRegisterComponent() {
     defaultValues: {
       cep: "",
       logradouro: "",
-      // numero: 0,
       cidade: "",
       bairro: "",
       estado: "",
@@ -94,18 +112,19 @@ export function ServiceRegisterComponent() {
   const [formaPagamentoSelecionada, setFormaPagamentoSelecionada] = useState<
     number[]
   >([]);
-
   const zipCode = watch("cep");
+  const options = tiposDeServico.map(tipo => ({ value: String(tipo.id), label: tipo.nome_servico }));
 
   const handleFormSubmit = async (data: ServiceRegisterFormData) => {
+    console.log("entro")
     const payload = {
       userId: user?.UserID,
       nome_empresa: data.nome_empresa,
       preco: data.preco,
       descricao: data.descricao,
-      horario: data.horario,
+      horario: data.horarioInicial + " até " + data.horarioFinal,
       domicilio: data.domicilio,
-      tipoServico: data.tipoServico, //fazer uma requisição
+      tipoServico: tipoServicoSelecionado, //fazer uma requisição
       cep: data.cep,
       logradouro: data.logradouro,
       numero: data.numero,
@@ -114,12 +133,12 @@ export function ServiceRegisterComponent() {
       estado: data.estado,
       mei: data.mei || "",
       cnpj: data.cnpj || "",
-      forma_pagamento: data.forma_pagamento,
+      forma_pagamento: formaPagamentoSelecionada,
     };
     console.log(payload);
 
     try {
-      const response = await api.post("/usuario/cadastro", payload);
+      const response = await api.post("/servico/cadastrarservico", payload);
       console.log(response.data);
 
       if (response.status === 200 || response.status === 201) {
@@ -219,7 +238,7 @@ export function ServiceRegisterComponent() {
                     {...register("preco", { valueAsNumber: true })}
                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                     id="grid-preco"
-                    type="number"
+                    type="decimal"
                   ></input>
                   {errors.preco?.message && (
                     <p className={styleP}>{errors.preco?.message}</p>
@@ -233,14 +252,22 @@ export function ServiceRegisterComponent() {
                     Horário
                   </label>
                   <input
-                    {...register("horario")}
+                    {...register("horarioInicial")}
                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
                     id="grid-horario"
                     type="time"
                     placeholder="Informe o horario"
                   ></input>
-                  {errors.horario?.message && (
-                    <p className={styleP}>{errors.horario?.message}</p>
+                  Até
+                  <input
+                    {...register("horarioFinal")}
+                    className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
+                    id="grid-horario"
+                    type="time"
+                    placeholder="Informe o horario"
+                  ></input>
+                  {errors.horarioInicial?.message && (
+                    <p className={styleP}>{errors.horarioInicial?.message}</p>
                   )}
                 </div>
 
@@ -261,7 +288,7 @@ export function ServiceRegisterComponent() {
                             checked={value === true}
                             onChange={() => onChange(true)}
                           />
-                          <label htmlFor="domicilio-sim" className="mr-4">
+                          <label className="mr-4">
                             Sim
                           </label>
 
@@ -272,7 +299,7 @@ export function ServiceRegisterComponent() {
                             checked={value === false}
                             onChange={() => onChange(false)}
                           />
-                          <label htmlFor="domicilio-nao">Não</label>
+                          <label>Não</label>
                         </>
                       )}
                     />
@@ -284,16 +311,14 @@ export function ServiceRegisterComponent() {
                   <label className="block text-gray-500 text-base mb-0">
                     Tipo de Serviço
                   </label>
-                  <select
-                    {...register("tipoServico")}
-                    className="h-8 bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
-                  >
-                    {tiposDeServico.map((tipo: TipoDeServico) => (
-                      <option key={tipo.id} value={tipo.id}>
-                        {tipo.nome_servico}
-                      </option>
-                    ))}
-                  </select>
+
+                  <Select
+                    options={options}
+                    value={options.find(option => option.value === tipoServicoSelecionado)}
+                    onChange={(selectedOption) => setTipoServicoSelecionado(selectedOption?.value || undefined)}
+                      
+                  />
+            
                 </div>
               </div>
 
@@ -308,10 +333,10 @@ export function ServiceRegisterComponent() {
                     maxLength={14}
                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                     type="text"
-                    // onChange={(e) => {
-                    //     e.target.value = cpfMask(e.target.value);
-                    //     setValue('cnpj', e.target.value);
-                    // }}
+                  // onChange={(e) => {
+                  //     e.target.value = cpfMask(e.target.value);
+                  //     setValue('cnpj', e.target.value);
+                  // }}
                   ></input>
                   {errors.cnpj?.message && (
                     <p className={styleP}>{errors.cnpj?.message}</p>
@@ -345,7 +370,7 @@ export function ServiceRegisterComponent() {
                       (formaPagamento, index) => (
                         <div key={formaPagamento}>
                           <input
-                          className="mx-1"
+                            className="mx-1"
                             type="checkbox"
                             id={`formaPagamento-${formaPagamento}`}
                             value={index + 1}
@@ -355,12 +380,12 @@ export function ServiceRegisterComponent() {
                                 checked
                                   ? [...prev, parseInt(e.target.value)]
                                   : prev.filter(
-                                      (val) => val !== parseInt(e.target.value)
-                                    )
+                                    (val) => val !== parseInt(e.target.value)
+                                  )
                               );
                             }}
                           />
-                          <label htmlFor={`formaPagamento-${formaPagamento}`}>
+                          <label>
                             {formaPagamento}
                           </label>
                         </div>
@@ -510,4 +535,7 @@ export function ServiceRegisterComponent() {
       </div>
     </>
   );
+            }catch(error){
+              console.log(error)
+            }
 }

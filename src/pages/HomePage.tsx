@@ -1,6 +1,6 @@
-import { Header } from "../components/Header";
+import { Header } from "../components/HeaderHomePage";
 import jayslogo from "../assets/images/jayslogo.png";
-import searchbutton from "../assets/images/SearchButtonBar.png"
+import searchbutton from "../assets/images/SearchButtonBar.png";
 
 export function HomePage() {
   return (

@@ -16,12 +16,12 @@ const loginFormSchema = z.object({
 type LoginFormInput = z.infer<typeof loginFormSchema>;
 
 export function Header() {
-    const {
-        register,
-        handleSubmit
-    } = useForm<LoginFormInput>({
-        resolver: zodResolver(loginFormSchema),
-    });
+    // const {
+    //     register,
+    //     handleSubmit
+    // } = useForm<LoginFormInput>({
+    //     resolver: zodResolver(loginFormSchema),
+    // });
 
     const handleFormSubmit = async (data: LoginFormInput) => {
         try {
@@ -46,18 +46,6 @@ export function Header() {
             <div className="bg-jays-orange p-5">
                 <nav className="flex items-center justify-between">
                     <h1 className="text-white">Jays</h1>
-                    <form onSubmit={handleSubmit(handleFormSubmit)}
-                        className="flex justify-center w-full md:w-1/2">
-                        <input
-                            className="flex-grow p-2 rounded-l-md"
-                            type="text"
-                            placeholder="Pesquise por qualquer serviço..."
-                            {...register("pesquisaPorNome")}
-                        />
-                        <button type="submit" className="rounded-r-md">
-                            <img className="" src={searchbutton}></img>
-                        </button>
-                    </form>
                     <ul className="flex justify-center items-center text-white">
                         <li className="pr-3">
                             <button><Link to="/home">Início</Link></button>

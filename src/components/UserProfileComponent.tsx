@@ -32,6 +32,13 @@ type UserProfileFormData = z.infer<typeof updateUserFormData>;
 
 export function UserProfileComponent() {
   const { user } = useContext(AuthContext);
+  const [infoPerfil, setInfoPerfil] = useState([]);
+  // const handleSetData = useCallback((data: AddressProps) => {
+  //   setValue("nome", data.localidade);
+  //   setValue("email", data.logradouro);
+  //   setValue("dt_nasc", data.bairro);
+  //   setValue("cpf", data.uf);
+  // }, []);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -46,6 +53,27 @@ export function UserProfileComponent() {
     criteriaMode: "all",
     mode: "all",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(user?.UserID)
+      console.log(user?.accessToken)
+      try {
+        const response = await api.get(`usuario/perfil/${user?.UserID}`, {
+          headers: {
+            Authorization: `JWT ${user?.accessToken}`,
+          },
+        });
+        console.log(response.data);
+        // Faça algo com os dados da API aqui
+      } catch (error) {
+        console.error('Erro ao chamar a API', error);
+        // Lide com o erro conforme necessário
+      }
+    };
+
+    fetchData(); // Chame a função para buscar os dados da API ao carregar a página
+  }, []);
 
   const handleFormSubmit = async (data: UserProfileFormData) => {
     

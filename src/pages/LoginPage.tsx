@@ -42,7 +42,6 @@ export function LoginPage() {
       const response = await api.post('/usuario/login', payload);
       if (response.status === 200) {
         login(response.data);
-        // alert("Login bem-sucedido!");
         setRedirectModalOpen(true);
       } else if(response.status != 200){
         setErrorMessage("Email ou senha inválidos.");

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import semimagem from "../assets/images/placeholder.png";
-import semicone from "../assets/images/iconimagedefault.png";
 
 type ServiceCardProps = {
   id: string;
+  id_servico: string;
   nome_empresa: string;
   descricao: string;
   preco: string;
@@ -12,15 +12,23 @@ type ServiceCardProps = {
 
 export function ServiceCard({
   id,
+  id_servico,
   nome_empresa,
   descricao,
   preco,
 }: ServiceCardProps) {
+  console.log("ServiceCard ID: ", id_servico);
+
   const navigate = useNavigate();
-  console.log(id);
 
   const handleRedirectToServiceDescription = () => {
-    navigate(`/detalheservico/${id}`);
+
+    if(id_servico == undefined){
+      id_servico = id;
+      console.log("NOVO ID: ", id_servico);
+    }
+
+    navigate(`/detalheservico/${id_servico}`);
   };
 
   return (

@@ -15,3 +15,26 @@ body::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border: 3px solid #354155; 
 }
+
+.active-link::after {
+  width: 100%;
+}
+.link-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.link-button:hover::after {
+  width: 100%;
+}
+
+.link-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: #d46e17; /* Altere para a cor desejada */
+  transition: width 0.3s ease-in-out;
+}

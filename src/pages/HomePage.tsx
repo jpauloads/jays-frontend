@@ -36,37 +36,6 @@ export function HomePage() {
       {/* Information sections */}
       <div className="bg-white container h-screen mx-auto my-10 w-full" >
         <div className="flex flex-wrap -mx-4 flex flex-col w-full">
-          {/* <div className="w-screen md:w-1/2 px-4 mb-8 md:mb-0 inline-flex">
-            <img
-              src={imagem1}
-              alt="Info 1"
-              className="w-[70%]"
-            />
-            <div className="flex-2 w-full">
-              <h2 className="text-2xl font-bold mt-4 w-full">
-                Na Plataforma Web Jay's
-              </h2>
-              <p className="text-gray-700 mt-2 w-full">
-                prestadores de serviços terão uma página personalizada onde
-                poderão expor informações sobre o seu serviço
-              </p>
-            </div>
-          </div>
-          <div className="w-full md:w-1/2 px-4 inline-flex">
-            <div>
-            <h2 className="text-2xl font-bold mt-4">Os clientes poderão</h2>
-            <p className="text-gray-700 mt-2">
-              visualizar a empresa, ver horários de funcionamento, conhecer
-              formas de entrar em contato com o ofertante e avaliar o serviço
-              prestado
-            </p>
-            </div>
-            <img
-              src={imagem2}
-              alt="Info 2"
-              className="w-[70%]"
-            />
-          </div> */}
           <div className="flex flex-col justify-center items-center">
             <div className="w-full px-4 mb-1 flex items-center justify-start">
               <img

@@ -3,8 +3,9 @@ import { ServiceCard } from "../components/ServiceCard";
 import { Header } from "../components/Header"; 
 import { api } from "../lib/axios"; 
 import Select from "react-select";
+import { useLocation } from "react-router-dom";
+import { useServices } from "../contexts/ServicesContext";
 
-// Tipo para definir a estrutura de dados de um serviço
 type Service = {
   id: string;
   id_servico: string;
@@ -20,23 +21,20 @@ type TipoDeServico = {
 
 export function SearchServicesPage() {
 
-  // const [selectedOption, setSelectedOption] = useState("none");
-  
-
   const [tipoServicoSelecionado, setTipoServicoSelecionado] = useState<string | undefined>("");
-
-
   const [tiposDeServico, setTiposDeServico] = useState<TipoDeServico[]>([]);
-  
   const options = tiposDeServico.map(tipo => ({ value: String(tipo.id), label: tipo.nome_servico }));
-
-
-  const [services, setServices] = useState<Service[]>([]);
-  // console.log(services);
+  const { services, setServices } = useServices();
+  const location = useLocation();
+  // const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
-
-    buscaTodosServico();
+    // console.log(location.state?.fromHomePage);
+    // console.log(location.state?.fromOtherPage);
+    if (!location.state?.fromHomePage && !location.state?.fromOtherPage) {
+      buscaTodosServico();
+      // console.log("ENTROU!");
+    }
 
     const fetchTiposDeServico = async () => {
       try {
@@ -96,10 +94,10 @@ export function SearchServicesPage() {
         <div className="w-full md:w-4/5 flex flex-col items-center">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
             {services.map((service) => {
-              // console.log("Service ID: ", service.id);
+              console.log("Service ID: ", service.id);
               return (
                 <ServiceCard
-                  // key={service.id_servico}
+                  key={service.id_servico}
                   id_servico={service.id_servico}
                   id={service.id}
                   nome_empresa={service.nome_empresa}

@@ -7,12 +7,14 @@ import { AuthContext } from "../contexts/AuthContext";
 import { api } from "../lib/axios";
 import { UserProfileComponent } from "../components/UserProfileComponent";
 import { ServiceRegisterComponent } from "../components/ServiceRegisterComponent";
+import { useServices } from "../contexts/ServicesContext";
 
 export function UpdateProfilePage() {
   const [currentSection, setCurrentSection] = useState("cadastro");
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const { user } = useContext(AuthContext);
+  const { setServices } = useServices();
 
   type AddressType = {
     id: string;
@@ -54,7 +56,7 @@ export function UpdateProfilePage() {
 
   return (
     <div className="min-h-screen bg-jays-orange">
-      <Header />
+      <Header setServices={setServices}/>
       <div className="flex justify-around w-full p-10">
         <Menu onClick={setCurrentSection} />
 

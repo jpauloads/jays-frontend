@@ -3,8 +3,28 @@ import jayslogo from "../assets/images/jayslogo.png";
 import imagem1 from "../assets/images/imghome1.jpg";
 import imagem2 from "../assets/images/imghome2.jpg";
 import searchbutton from "../assets/images/SearchButtonBar.png";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { api } from "../lib/axios";
+import { useServices } from "../contexts/ServicesContext";
 
 export function HomePage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+  const { setServices } = useServices();
+
+  const handleSearch = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      const response = await api.get(`/servico/buscaserviconome/${searchTerm}`);
+      console.log(response.data);
+      setServices(response.data);
+      navigate("/servicos", { state: { fromHomePage: true}});
+    } catch (error) {
+      console.error("Erro na chamada da API", error);
+    }
+  };
+  
   return (
     <>
       <Header />
@@ -14,16 +34,20 @@ export function HomePage() {
           <h1 className="text-4xl font-bold text-white mb-3">
             Encontre o serviço ideal imediatamente
           </h1>
-          <div className="flex">
-            <input
+
+          <form onSubmit={handleSearch} className="flex">
+          <input
               className="flex-grow p-2 rounded-l-md"
               type="text"
               placeholder="Pesquise por qualquer serviço..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="rounded-r-md">
+            <button type="submit" className="rounded-r-md">
               <img className="" src={searchbutton}></img>
             </button>
-          </div>
+          </form>
+
           {/* Tags for popular services */}
           {/* Render popular services dynamically */}
           {/* ... */}

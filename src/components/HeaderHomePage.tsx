@@ -58,8 +58,8 @@ export function Header() {
                 Início
               </Link>
             </li>
-            <li className="pr-3 col" >
-            <Link
+            <li className="pr-3 col">
+              <Link
                 to="/servicos"
                 className={
                   location.pathname.startsWith("/servicos")
@@ -71,7 +71,7 @@ export function Header() {
               </Link>
             </li>
             <li className="pr-3">
-            <Link
+              <Link
                 to="#"
                 className={
                   location.pathname.startsWith("#")
@@ -81,6 +81,18 @@ export function Header() {
               >
                 Sobre nós
               </Link>
+            </li>
+            <li className="pr-3">
+              {user ? (
+                <button className={
+                  location.pathname.startsWith("/atualizardados")
+                    ? "bg-jays-hover text-white font-bold py-2 px-4 rounded border border-white-500"
+                    : "hover:bg-jays-hover transition-bg duration-300 text-white font-bold py-2 px-4 rounded border border-white-500"}>
+                  <Link to="/atualizardados" className="font-semibold">
+                    Perfil
+                  </Link>
+                </button>
+              ) : null}
             </li>
             <li className="pr-3">
               {user ? (
@@ -98,6 +110,8 @@ export function Header() {
                 </button>
               )}
             </li>
+
+            
           </ul>
         </nav>
       </div>

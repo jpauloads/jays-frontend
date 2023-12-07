@@ -35,7 +35,7 @@ export function HomePage() {
 
       {/* Information sections */}
       <div className="bg-white container h-screen mx-auto my-10 w-full" >
-        <div className="flex flex-wrap -mx-4 flex flex-col w-full">
+        <div className="flex-wrap -mx-4 flex flex-col w-full">
           <div className="flex flex-col justify-center items-center">
             <div className="w-full px-4 mb-1 flex items-center justify-start">
               <img

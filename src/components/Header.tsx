@@ -98,6 +98,18 @@ export function Header() {
             </li>
             <li className="pr-3">
               {user ? (
+                <button className={
+                  location.pathname.startsWith("/atualizardados")
+                    ? "bg-jays-hover text-white font-bold py-2 px-4 rounded border border-white-500"
+                    : "hover:bg-jays-hover transition-bg duration-300 text-white font-bold py-2 px-4 rounded border border-white-500"}>
+                  <Link to="/atualizardados" className="font-semibold">
+                    Perfil
+                  </Link>
+                </button>
+              ) : null}
+            </li>
+            <li className="pr-3">
+              {user ? (
                 <button
                   onClick={handleLogout}
                   className="hover:bg-jays-hover transition-bg duration-300 text-white font-bold py-2 px-4 rounded border border-white-500"
@@ -112,6 +124,7 @@ export function Header() {
                 </button>
               )}
             </li>
+            
           </ul>
         </nav>
       </div>

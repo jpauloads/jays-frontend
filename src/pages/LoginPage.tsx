@@ -1,4 +1,3 @@
-// import React from "react";
 import { ImageCard } from "../components/ImageCard";
 import jayslogo from "../assets/images/jayslogo.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +9,8 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import ErrorModal from "../components/ErrorModal";
 import { RedirectModal } from "../components/RedirectModal";
+import { LoadingModal } from '../components/LoadingModal';
+
 
 const styleP = "text-xs font-semibold text-red-500";
 
@@ -34,8 +35,10 @@ export function LoginPage() {
   });
 
   const { login } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (data: LoginFormInput) => {
+    setIsLoading(true);
     try {
       const payload = { email: data.email, senha: data.senha };
       
@@ -51,6 +54,8 @@ export function LoginPage() {
       setErrorMessage(
         "Ocorreu um problema ao tentar fazer login. Por favor, tente novamente mais tarde."
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,6 +74,7 @@ export function LoginPage() {
 
   return (
     <>
+      {isLoading && <LoadingModal />}
       <div className="bg-jays-orange w-screen h-screen flex flex-wrap items-center justify-center">
         <div className="flex">
           <div className="bg-white rounded-bl-2xl rounded-tl-2xl items-center p-10 shadow-lg w-full max-lg:rounded-2xl">

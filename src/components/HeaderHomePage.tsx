@@ -1,36 +1,10 @@
 // import React from "react";
-import { z } from "zod";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext"; // Ajuste o caminho conforme necessário
-import { api } from "../lib/axios";
-
-const loginFormSchema = z.object({
-  pesquisaPorNome: z.string(),
-});
-
-type LoginFormInput = z.infer<typeof loginFormSchema>;
 
 export function Header() {
   const location = useLocation();
-  // const {
-  //     register,
-  //     handleSubmit
-  // } = useForm<LoginFormInput>({
-  //     resolver: zodResolver(loginFormSchema),
-  // });
-
-  const handleFormSubmit = async (data: LoginFormInput) => {
-    try {
-      console.log(data.pesquisaPorNome);
-      const response = await api.get(
-        `/servico/buscaserviconome/${data.pesquisaPorNome}`
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error("Erro na chamada da API", error);
-    }
-  };
 
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ServiceCard } from "../components/ServiceCard";
-import { Header } from "../components/Header"; // Supondo que Header é um componente existente
-import { api } from "../lib/axios"; // Supondo que api é uma instância axios configurada
+import { Header } from "../components/Header"; 
+import { api } from "../lib/axios"; 
 import Select from "react-select";
 
 // Tipo para definir a estrutura de dados de um serviço
@@ -20,18 +20,11 @@ type TipoDeServico = {
 
 export function SearchServicesPage() {
 
-  const [selectedOption, setSelectedOption] = useState("none");
+  // const [selectedOption, setSelectedOption] = useState("none");
   
-  const handleTypeSelect = (e: { value: SetStateAction<string>; }) => {
-    setSelectedOption(e.value);
-  };
 
   const [tipoServicoSelecionado, setTipoServicoSelecionado] = useState<string | undefined>("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    setTipoServicoSelecionado(selectedValue);
-  };
 
   const [tiposDeServico, setTiposDeServico] = useState<TipoDeServico[]>([]);
   
@@ -78,11 +71,9 @@ export function SearchServicesPage() {
     }
   };
   
-  //id_servico é o que a req espera
-
   return (
     <>
-      <Header />
+      <Header setServices={setServices} />
       <div className="container mx-auto flex flex-wrap py-6">
         {/* Sidebar / Filtros */}
         <aside className="w-full md:w-1/5 bg-white rounded p-4 ">

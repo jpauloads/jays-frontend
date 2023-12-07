@@ -2,31 +2,45 @@
 import { z } from "zod";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext"; // Ajuste o caminho conforme necessário
+import { AuthContext } from "../contexts/AuthContext";
 import { api } from "../lib/axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import searchbutton from "../assets/images/SearchButtonBar.png";
 
-const loginFormSchema = z.object({
+type Service = {
+  id: string;
+  id_servico: string;
+  nome_empresa: string;
+  descricao: string;
+  preco: number;
+};
+
+type HeaderProps = {
+  setServices: React.Dispatch<React.SetStateAction<Service[]>>;
+};
+
+const searchBarFormSchema = z.object({
   pesquisaPorNome: z.string(),
 });
 
-type LoginFormInput = z.infer<typeof loginFormSchema>;
+type SearchBarFormInput = z.infer<typeof searchBarFormSchema>;
 
-export function Header() {
+export function Header({ setServices }: HeaderProps) {
   const location = useLocation();
-  const { register, handleSubmit } = useForm<LoginFormInput>({
-    resolver: zodResolver(loginFormSchema),
+  const { register, handleSubmit } = useForm<SearchBarFormInput>({
+    resolver: zodResolver(searchBarFormSchema),
   });
 
-  const handleFormSubmit = async (data: LoginFormInput) => {
+  const handleFormSubmit = async (data: SearchBarFormInput) => {
     try {
       console.log(data.pesquisaPorNome);
       const response = await api.get(
         `/servico/buscaserviconome/${data.pesquisaPorNome}`
       );
       console.log(response.data);
+      setServices(response.data);
+      navigate("/servicos");
     } catch (error) {
       console.error("Erro na chamada da API", error);
     }

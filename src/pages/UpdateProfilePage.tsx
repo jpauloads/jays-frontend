@@ -40,9 +40,7 @@ export function UpdateProfilePage() {
     // Certifica-se de que o user está definido
     if (user && user.UserID) {
       try {
-        console.log(user.UserID)
         const response = await api.get(`/usuario/enderecos/${user.UserID}`);
-        console.log("Endereços recebidos:", response.data);
         setAddresses(response.data);
       } catch (error) {
         console.error("Erro ao buscar os endereços", error);
@@ -76,7 +74,6 @@ export function UpdateProfilePage() {
               id={address.id}
               address={formatAddress(address)}
               onClick={(section, id) => {
-                console.log(id);
                 setCurrentSection(section);
                 setSelectedAddressId(id);
               }}

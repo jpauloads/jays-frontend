@@ -94,9 +94,7 @@ const handleFormSubmit = async (data: CreateUserFormData) => {
   };
 
   try {
-      console.log(payload);
       const response = await api.put('/usuario/updateEndereco', payload);
-      console.log(response.data);
       
       if(response.status === 200 || response.status === 201){
           setSuccessMessage("Endereço salvo com sucesso!");

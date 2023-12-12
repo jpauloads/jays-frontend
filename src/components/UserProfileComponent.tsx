@@ -88,8 +88,6 @@ export function UserProfileComponent() {
     const fetchData = async () => {
 
       setIsLoading(true);
-      console.log(user?.UserID)
-      console.log(user?.accessToken)
       try {
         const response = await api.get(`usuario/perfil/${user?.UserID}`, {
           headers: {
@@ -98,7 +96,6 @@ export function UserProfileComponent() {
         });
         
         response.data.dt_nasc = response.data.dt_nasc.split('T')[0]
-        console.log(response.data);
         handleSetData(response.data)
       } catch (error) {
         console.error('Erro ao chamar a API', error);
@@ -114,11 +111,8 @@ export function UserProfileComponent() {
   const handleFormSubmit = async (data: UserPostData) => {
     setIsLoading(true);
     const { ...payload } = data;
-    console.log(payload);
     try {
       const response = await api.put("/usuario/updateCadastro", payload);
-      console.log(response.data);
-
       if (response.status === 200 || response.status === 201) {
         setSuccessMessage("Cadastro atualizado com sucesso!");
       }else{

@@ -42,7 +42,6 @@ export function NewPasswordPage() {
   const { login } = useContext(AuthContext);
 
   const handleFormSubmit = async (data: LoginFormInput) => {
-    console.log('Form submitted:', data);
     if (data.senha !== data.confirmaSenha) {
       setErrorMessage("As senhas não coincidem");
       return;

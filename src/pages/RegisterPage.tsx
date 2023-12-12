@@ -106,12 +106,9 @@ export function RegisterPage() {
     setIsLoading(true);
 
     const { confirmPassword, ...payload } = data;
-    console.log(payload);
 
     try {
       const response = await api.post("/usuario/cadastro", payload);
-      console.log(response.data);
-
       if (response.status === 200 || response.status === 201) {
         setSuccessMessage("Cadastro realizado com sucesso!");
       }

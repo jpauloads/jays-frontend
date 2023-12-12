@@ -34,11 +34,9 @@ export function Header({ setServices }: HeaderProps) {
 
   const handleFormSubmit = async (data: SearchBarFormInput) => {
     try {
-      console.log(data.pesquisaPorNome);
       const response = await api.get(
         `/servico/buscaserviconome/${data.pesquisaPorNome}`
       );
-      console.log(response.data);
       setServices!(response.data);
       navigate("/servicos", { state: { fromOtherPage: true}});
     } catch (error) { 

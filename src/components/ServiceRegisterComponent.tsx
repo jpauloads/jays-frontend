@@ -76,7 +76,6 @@ type AddressProps = {
 export function ServiceRegisterComponent() {
   const [isLoading, setIsLoading] = useState(false);
 
-  try {
     const [selectedOption, setSelectedOption] = useState("none");
 
     const handleTypeSelect = (e: { value: SetStateAction<string> }) => {
@@ -128,7 +127,6 @@ export function ServiceRegisterComponent() {
 
     const handleFormSubmit = async (data: ServiceRegisterFormData) => {
       setIsLoading(true);
-      console.log("entro");
       const payload = {
         userId: user?.UserID,
         nome_empresa: data.nome_empresa,
@@ -147,11 +145,9 @@ export function ServiceRegisterComponent() {
         cnpj: data.cnpj || "",
         forma_pagamento: formaPagamentoSelecionada,
       };
-      console.log(payload);
 
       try {
         const response = await api.post("/servico/cadastrarservico", payload);
-        console.log(response.data);
 
         if (response.status === 200 || response.status === 201) {
           setSuccessMessage("Serviço cadastrado com sucesso!");
@@ -559,7 +555,4 @@ export function ServiceRegisterComponent() {
         </div>
       </>
     );
-  } catch (error) {
-    console.log(error);
-  }
 }

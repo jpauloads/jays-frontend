@@ -17,7 +17,7 @@ type Service = {
 };
 
 type HeaderProps = {
-  setServices: React.Dispatch<React.SetStateAction<Service[]>>;
+  setServices?: React.Dispatch<React.SetStateAction<Service[]>>;
 };
 
 const searchBarFormSchema = z.object({
@@ -39,9 +39,9 @@ export function Header({ setServices }: HeaderProps) {
         `/servico/buscaserviconome/${data.pesquisaPorNome}`
       );
       console.log(response.data);
-      setServices(response.data);
+      setServices!(response.data);
       navigate("/servicos", { state: { fromOtherPage: true}});
-    } catch (error) {
+    } catch (error) { 
       console.error("Erro na chamada da API", error);
     }
   };

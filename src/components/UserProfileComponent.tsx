@@ -9,6 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { api } from "../lib/axios";
+import { LoadingModal } from "./LoadingModal";
 
 const updateUserFormData = z
   .object({
@@ -58,8 +59,8 @@ type UserPostData = {
 }
 
 export function UserProfileComponent() {
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
-  const [infoPerfil, setInfoPerfil] = useState([]);
   const handleSetData = useCallback((data: UserGetResponse) => {
     setValue("nome", data.nome);
     setValue("email", data.email);
@@ -85,6 +86,8 @@ export function UserProfileComponent() {
 
   useEffect(() => {
     const fetchData = async () => {
+
+      setIsLoading(true);
       console.log(user?.UserID)
       console.log(user?.accessToken)
       try {
@@ -100,6 +103,8 @@ export function UserProfileComponent() {
       } catch (error) {
         console.error('Erro ao chamar a API', error);
         // Lide com o erro conforme necessário
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -107,10 +112,9 @@ export function UserProfileComponent() {
   }, []);
 
   const handleFormSubmit = async (data: UserPostData) => {
-    
+    setIsLoading(true);
     const { ...payload } = data;
     console.log(payload);
-
     try {
       const response = await api.put("/usuario/updateCadastro", payload);
       console.log(response.data);
@@ -132,6 +136,8 @@ export function UserProfileComponent() {
           "Ocorreu um problema. Por favor, tente novamente mais tarde."
         );
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -149,6 +155,8 @@ export function UserProfileComponent() {
   const styleP = "text-xs font-semibold text-red-500";
 
   return (
+    <>
+    {isLoading && <LoadingModal />}
     <div className="bg-white shadow rounded-lg p-6">
       <div className="w-full justify-center">
         <div className="pb-10 lg:border-b-0 lg:border-r">
@@ -175,7 +183,7 @@ export function UserProfileComponent() {
                   <input
                     {...register("nome")}
 
-                    className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                    className="h-8 appearance-none block w-full bg-gray-300 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                     disabled
                   ></input>
@@ -192,7 +200,7 @@ export function UserProfileComponent() {
                   </label>
                   <input
                     {...register("email")}
-                    className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                    className="h-8 appearance-none block w-full bg-gray-300 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                     type="email"
                     disabled
                   ></input>
@@ -211,7 +219,7 @@ export function UserProfileComponent() {
                   </label>
                   <input
                     {...register("dt_nasc")}
-                    className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
+                    className="h-8 appearance-none block w-full bg-gray-300 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
                     id="grid-nascimento"
                     type="date"
                     disabled
@@ -229,7 +237,7 @@ export function UserProfileComponent() {
                   </label>
                   <input
                     {...register("documento")}
-                    className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
+                    className="h-8 appearance-none block w-full bg-gray-300 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
                     id="grid-cpf"
                     type="text"
                     disabled
@@ -256,6 +264,7 @@ export function UserProfileComponent() {
                     className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
                     id="grid-telefone"
                     type="text"
+                    maxLength={14}
                     onChange={(e) => {
                       e.target.value = phoneMask(e.target.value);
                       setValue("telefone", e.target.value);
@@ -278,6 +287,7 @@ export function UserProfileComponent() {
                     id="grid-password"
                     type="password"
                     placeholder="*********"
+                    maxLength={25}
                   ></input>
                   {errors.senha?.message && (
                     <p className={styleP}>{errors.senha?.message}</p>
@@ -299,5 +309,6 @@ export function UserProfileComponent() {
         </div>
       </div>
     </div>
+    </>
   );
 }

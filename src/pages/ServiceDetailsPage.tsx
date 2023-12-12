@@ -1,49 +1,53 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { api } from '../lib/axios';
 import { Header } from '../components/Header';
+import { ProfileCard } from '../components/ReviewCard';
+
 
 type ServiceDetailType = {
-    id: string;
-    nome_empresa: string;
-    preco: string;
-    descricao: string;
-    horario: string;
-    domicilio: boolean;
-    forma_pagamento: number[];
-    dt_criacao: string;
-    dt_alteracao: string;
-    id_tipo_servico: string;
-    id_usuario: string;
-  };
-  
-  export function ServiceDetailsPage() {
-    //extração do parâmetro
-    const { id_servico } = useParams<{ id_servico: string }>();
-    const [serviceDetails, setServiceDetails] = useState<ServiceDetailType | null>(null);
-  
-    useEffect(() => {
-      const fetchServiceDetails = async () => {
-        try {
-          const response = await api.get(`/servico/buscaservico/idservico/${id_servico}`);
-          setServiceDetails(response.data);
-        } catch (error) {
-          console.error('Erro ao buscar detalhes do serviço', error);
-        }
-      };
-  
-      if (id_servico) {
-        fetchServiceDetails();
+  id: string;
+  nome_empresa: string;
+  preco: string;
+  descricao: string;
+  horario: string;
+  domicilio: boolean;
+  forma_pagamento: number[];
+  dt_criacao: string;
+  dt_alteracao: string;
+  id_tipo_servico: string;
+  id_usuario: string;
+};
+
+export function ServiceDetailsPage() {
+  //extração do parâmetro
+  const { id_servico } = useParams<{ id_servico: string }>();
+  const [serviceDetails, setServiceDetails] = useState<ServiceDetailType | null>(null);
+
+  useEffect(() => {
+    const fetchServiceDetails = async () => {
+      try {
+        const response = await api.get(`/servico/buscaservico/idservico/${id_servico}`);
+        setServiceDetails(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar detalhes do serviço', error);
       }
-    }, [id_servico]);
-  
-    if (!serviceDetails) {
-      return <div>Loading...</div>;
+    };
+
+    if (id_servico) {
+      fetchServiceDetails();
     }
+  }, [id_servico]);
+
+  if (!serviceDetails) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <Header />
+      <Header setServices={function (value: SetStateAction<{ id: string; id_servico: string; nome_empresa: string; descricao: string; preco: number; }[]>): void {
+        throw new Error('Function not implemented.');
+      }} />
       <div className="container mx-auto my-10 p-5">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">

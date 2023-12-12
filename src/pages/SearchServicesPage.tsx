@@ -26,14 +26,10 @@ export function SearchServicesPage() {
   const options = tiposDeServico.map(tipo => ({ value: String(tipo.id), label: tipo.nome_servico }));
   const { services, setServices } = useServices();
   const location = useLocation();
-  // const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
-    // console.log(location.state?.fromHomePage);
-    // console.log(location.state?.fromOtherPage);
     if (!location.state?.fromHomePage && !location.state?.fromOtherPage) {
       buscaTodosServico();
-      // console.log("ENTROU!");
     }
 
     const fetchTiposDeServico = async () => {
@@ -53,7 +49,6 @@ export function SearchServicesPage() {
     try {
       const response = await api.get<Service[]>("/servico/buscatodos");
       setServices(response.data);
-      console.log("Serviço vindo do BUSCA TODOS: ", response.data);
     } catch (error) {
       console.error("Erro ao buscar serviços", error);
     }
@@ -63,7 +58,6 @@ export function SearchServicesPage() {
     try {
       const response = await api.get<Service[]>(`/buscar/tiposervico/${selectedType}`);
       setServices(response.data);
-      console.log("Serviço pelo TIPO: ", response.data);
     } catch (error) {
       console.error("Erro ao buscar serviços", error);
     }
@@ -94,7 +88,6 @@ export function SearchServicesPage() {
         <div className="w-full md:w-4/5 flex flex-col items-center">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
             {services.map((service) => {
-              console.log("Service ID: ", service.id);
               return (
                 <ServiceCard
                   key={service.id_servico}

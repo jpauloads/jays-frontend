@@ -17,7 +17,6 @@ export function ServiceCard({
   descricao,
   preco,
 }: ServiceCardProps) {
-  console.log("ServiceCard ID: ", id_servico);
 
   const navigate = useNavigate();
 
@@ -25,7 +24,6 @@ export function ServiceCard({
 
     if(id_servico == undefined){
       id_servico = id;
-      console.log("NOVO ID: ", id_servico);
     }
 
     navigate(`/detalheservico/${id_servico}`);

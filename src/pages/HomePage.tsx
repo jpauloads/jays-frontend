@@ -17,7 +17,6 @@ export function HomePage() {
     event.preventDefault();
     try {
       const response = await api.get(`/servico/buscaserviconome/${searchTerm}`);
-      console.log(response.data);
       setServices(response.data);
       navigate("/servicos", { state: { fromHomePage: true}});
     } catch (error) {

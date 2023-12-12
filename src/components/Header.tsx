@@ -41,7 +41,7 @@ export function Header({ setServices }: HeaderProps) {
       console.log(response.data);
       setServices!(response.data);
       navigate("/servicos", { state: { fromOtherPage: true}});
-    } catch (error) {
+    } catch (error) { 
       console.error("Erro na chamada da API", error);
     }
   };

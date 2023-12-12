@@ -11,6 +11,7 @@ import { api } from "../lib/axios";
 import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import { AxiosError } from "axios";
+import { LoadingModal } from "../components/LoadingModal";
 
 const createUserFormSchema = z
   .object({
@@ -23,7 +24,7 @@ const createUserFormSchema = z
     bairro: z.string().min(1, "Campo inválido"),
     descricao: z.string().default("CPF"),
     // login: z.string().min(4, 'Username deve ter pelo menos 4 caracteres'),
-    telefone: z.string().min(1, "Digite um telefone válido"),
+    telefone: z.string().length(14, "Digite um telefone válido"),
     email: z.string().email("Email inválido"),
     senha: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
     confirmPassword: z
@@ -64,6 +65,7 @@ type AddressProps = {
 };
 
 export function RegisterPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -92,6 +94,7 @@ export function RegisterPage() {
   const zipCode = watch("cep");
 
   const handleFormSubmit = async (data: CreateUserFormData) => {
+  
     if (data.senha !== data.confirmPassword) {
       setError("confirmPassword", {
         type: "manual",
@@ -99,6 +102,8 @@ export function RegisterPage() {
       });
       return;
     }
+
+    setIsLoading(true);
 
     const { confirmPassword, ...payload } = data;
     console.log(payload);
@@ -120,6 +125,8 @@ export function RegisterPage() {
           "Ocorreu um problema. Por favor, tente novamente mais tarde."
         );
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -157,6 +164,7 @@ export function RegisterPage() {
 
   return (
     <>
+    {isLoading && <LoadingModal />}
       <div className="bg-jays-orange w-screen h-screen flex flex-wrap items-center justify-center">
         <div className="flex">
           <div className="bg-white rounded-bl-2xl rounded-tl-2xl p-10 shadow-lg w-full">
@@ -179,6 +187,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       {...register("nome")}
+                      maxLength={50}
                       className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                       type="text"
                     ></input>
@@ -214,6 +223,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       {...register("telefone")}
+                      maxLength={14}
                       className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
                       id="grid-telefone"
                       type="text"
@@ -268,6 +278,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       {...register("senha")}
+                      maxLength={25}
                       className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
                       id="grid-password"
                       type="password"
@@ -286,6 +297,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       {...register("confirmPassword")}
+                      maxLength={25}
                       className="h-8 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white "
                       id="grid-confirm-password"
                       type="password"
